@@ -48,9 +48,11 @@ int main(int argc, char **argv)
         }
         n = recv(connfd, buff, MAXLINE, 0);
         buff[n] = '\0';
+        char str[] = "Hello World!";
+        send(connfd, str, strlen(str), 0);
         printf("recv msg from client: %s\n", buff);
         close(connfd);
     }
-
+    
     close(listenfd);
 }

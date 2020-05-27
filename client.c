@@ -34,21 +34,28 @@ int main(int argc, char **argv)
         printf("inet_pton error for %s\n", argv[1]);
         exit(0);
     }
-
     if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
     {
         printf("connect error: %s(errno: %d)\n", strerror(errno), errno);
-        exit(0);
+        exit(1);
     }
-
-    printf("send msg to server: \n");
-    fgets(sendline, 4096, stdin);
-    if (send(sockfd, sendline, strlen(sendline), 0) < 0)
+    while (1)
     {
-        printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
-        exit(0);
-    }
+        
+        printf("send msg to server: \n");
+        fgets(sendline, 4096, stdin);
+        if (send(sockfd, sendline, strlen(sendline), 0) < 0)
+        {
+            printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
+            exit(0);
+        }
 
-    close(sockfd);
+        n = recv(sockfd, recvline, MAXLINE, 0);
+
+        recvline[n] = '\0';
+        printf("recv msg from server: %s\n", recvline);
+        
+    }
+close(sockfd);
     exit(0);
 }
